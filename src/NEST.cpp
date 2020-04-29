@@ -1411,8 +1411,8 @@ double NESTcalc::GetDriftVelocity_Liquid(double Kelvin, double Density,
 
   if (speed <= 0.) {
     if (eField < 1e2 && eField >= FIELD_MIN) {
-      cerr << "\nERROR: DRIFT SPEED NON-POSITIVE -- FIELD TOO LOW\n";
-      exit(EXIT_FAILURE);
+      // cerr << "\nERROR: DRIFT SPEED NON-POSITIVE -- FIELD TOO LOW\n";
+      // exit(EXIT_FAILURE);
     }
     if (eField > 1e4) {
       cerr << "\nERROR: DRIFT SPEED NON-POSITIVE -- FIELD TOO HIGH\n";
