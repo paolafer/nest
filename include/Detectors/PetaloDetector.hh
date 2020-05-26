@@ -9,7 +9,7 @@ class PetaloDetector : public VDetector {
  public:
   PetaloDetector() {
     cerr << "*** Detector definition message ***" << endl;
-    cerr << "You are currently using the default XENON10 template detector."
+    cerr << "You are currently using the PETALO detector."
          << endl
          << endl;
 
