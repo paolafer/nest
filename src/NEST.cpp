@@ -52,8 +52,10 @@ NESTresult NESTcalc::FullCalculation(INTERACTION_TYPE species, double energy,
 
 double NESTcalc::PhotonTime(INTERACTION_TYPE species, bool exciton,
                             double dfield, double energy) {
-  double time_ns = 0., SingTripRatio, tauR = 0., tau3 = 23.97,
-    tau1 = 3.27; //arXiv:1802.06162. NR may need tauR ~0.5-1ns instead of 0
+  double time_ns = 0., SingTripRatio, tauR = 0.;//, tau3 = 23.97,
+  //tau1 = 3.27; //arXiv:1802.06162. NR may need tauR ~0.5-1ns instead of 0
+  double tau3 = 43.5; //arXiv:1807.07121 Hogenbirk
+  double tau1 = 2.; //arXiv:1807.07121 Hogenbirk
   if (fdetector->get_inGas() ||
       energy < W_DEFAULT * 0.001) {  // from G4S1Light.cc in old NEST
     tau1 = 5.18;                     // uncertainty of 1.55 ns from G4S2Light
@@ -71,13 +73,17 @@ double NESTcalc::PhotonTime(INTERACTION_TYPE species, bool exciton,
             0.416);  // spans 2.3 (alpha) and 7.8 (Cf in Xe) from NEST v1
   else {             // ER
     if (!exciton) {
-      tauR = exp(-0.00900 * dfield) *
-	(7.3138 + 3.8431 * log10(energy));    // arXiv:1310.1117
-      if ( tauR < 3.5 ) tauR = 3.5; //used to be for gammas only but helpful for matching beta data better
-      if ( dfield > 8e2 ) dfield = 8e2; //to match Kubota's 4,000 V/cm
-      SingTripRatio = 1.00 * pow(energy, -0.45+0.0005*dfield);  // see comment below; also, dfield may need to be fixed at ~100-200 V/cm (for NR too)
+      //tauR = exp(-0.00900 * dfield) *
+      //	(7.3138 + 3.8431 * log10(energy));    // arXiv:1310.1117
+      //if ( tauR < 3.5 ) tauR = 3.5; //used to be for gammas only but helpful for matching beta data better
+      //if ( dfield > 8e2 ) dfield = 8e2; //to match Kubota's 4,000 V/cm
+      //SingTripRatio = 1.00 * pow(energy, -0.45+0.0005*dfield);  // see comment below; also, dfield may need to be fixed at ~100-200 V/cm (for NR too)
+      //    SingTripRatio = 0.0695187; // this is A1/A3, it's different from GEANT4 YIELDRATIO (A1/(A1+A3))
+      SingTripRatio = 0.0309278; // = 0.03/(1-0.03) arXiv:1807.07121, this is A1/A3, NOT A1/(A1+A3)
     } else
-      SingTripRatio = 0.20 * pow(energy, -0.45+0.0005*dfield);  // mixing arXiv:1807.07121 with Kubota 1979
+      //SingTripRatio = 0.20 * pow(energy, -0.45+0.0005*dfield);  // mixing arXiv:1807.07121 with Kubota 1979
+      //    SingTripRatio = 0.0695187; // this is A1/A3, it's different from GEANT4 YIELDRATIO (A1/(A1+A3))
+      SingTripRatio = 0.0309278; // = 0.03/(1-0.03) arXiv:1807.07121, this is A1/A3, NOT A1/(A1+A3)
   }
   
   if (fdetector->get_inGas() || energy < W_DEFAULT * 0.001) {
